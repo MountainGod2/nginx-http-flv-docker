@@ -7,7 +7,7 @@
 ## Usage
 ### How to run the server
 ```sh
-docker run -dp 1935:1935 dvdgiessen/nginx-rtmp-docker
+docker run -dp 1935:1935 mountaingod2/nginx-http-flv-docker
 ```
 
 ### How to stream to the server
@@ -28,4 +28,4 @@ Using VLC:
  * Click Play.
 
 ## More info
-Docker Hub: https://hub.docker.com/r/dvdgiessen/nginx-rtmp-docker/
+Docker Hub: 
