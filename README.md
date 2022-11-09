@@ -1,4 +1,4 @@
-# nginx-rtmp-docker
+# nginx-http-flv-docker
 **Dockerfile for building an Nginx + HTTP+FLV module for replicating streams**
 
 ![docker pulls](https://img.shields.io/docker/pulls/dvdgiessen/nginx-rtmp-docker.svg)
