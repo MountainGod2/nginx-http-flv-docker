@@ -11,5 +11,8 @@ COPY --from=builder /usr/local/nginx /usr/local/nginx
 EXPOSE 80 443 1935
 VOLUME ["/etc/nginx", "/var/cache/nginx"]
 
+COPY nginx.conf /etc/nginx/nginx.conf
+RUN chmod 444 /etc/nginx/nginx.conf
+
 ENTRYPOINT ["/usr/local/nginx/sbin/nginx"]
 CMD ["-g", "daemon off;"]
