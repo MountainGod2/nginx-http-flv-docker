@@ -8,9 +8,6 @@ FROM lsiobase/alpine:3.16 as nginx
 RUN apk add --update pcre ffmpeg
 COPY --from=builder /usr/local/nginx /usr/local/nginx
 
-RUN ln -sf /dev/stdout /var/log/nginx/access.log
-RUN ln -sf /dev/stderr /var/log/nginx/error.log
-
 EXPOSE 80 443 1935
 VOLUME ["/etc/nginx", "/var/cache/nginx"]
 
