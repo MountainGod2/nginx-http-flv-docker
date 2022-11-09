@@ -6,32 +6,13 @@ RUN cd nginx && ./auto/configure --add-module=../nginx-http-flv-module && make &
 
 FROM lsiobase/alpine:3.16 as nginx
 RUN apk add --update pcre ffmpeg
-
 COPY --from=builder /usr/local/nginx /usr/local/nginx
 
-RUN addgroup -S nginx && \
-    adduser -s /sbin/nologin -G nginx -S -D -H nginx
+RUN ln -sf /dev/stdout /var/log/nginx/access.log
+RUN ln -sf /dev/stderr /var/log/nginx/error.log
 
-# Set up directories
-RUN mkdir -p /etc/nginx /var/log/nginx /var/www && \
-    chown -R nginx:nginx /var/log/nginx /var/www && \
-    chmod -R 775 /var/log/nginx /var/www
-
-# Forward logs to Docker
-RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
-    ln -sf /dev/stderr /var/log/nginx/error.log
-
-# Set up exposed ports
 EXPOSE 80 443 1935
-
 VOLUME ["/etc/nginx", "/var/cache/nginx"]
 
-# Set up entrypoint
-COPY docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod 555 /docker-entrypoint.sh
-ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD []
-
-# Set up config file
-COPY nginx.conf /etc/nginx/nginx.conf
-RUN chmod 444 /etc/nginx/nginx.conf
+ENTRYPOINT ["/usr/local/nginx/sbin/nginx"]
+CMD ["-g", "daemon off;"]
