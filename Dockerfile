@@ -5,25 +5,24 @@ ARG ALPINE_VERSION=alpine:3.8
 FROM ${ALPINE_VERSION}
 
 # Software versions to build
-ARG NGINX_VERSION=nginx-1.15.8
-ARG NGINX_RTMP_MODULE_VERSION=6f5487ada9848a66cc7a3ed375e404fc95cc5302
+ARG NGINX_VERSION=nginx-1.2.6
+ARG NGINX_HTTP_FLV_MODULE_VERSION=4e12f45427d8ca15c1328b71baed757f8d852013
 
 # Install buildtime dependencies
 # Note: We build against LibreSSL instead of OpenSSL, because LibreSSL is already included in Alpine
 RUN apk --no-cache add build-base libressl-dev
 
 # Download sources
-# Note: We download our own fork of nginx-rtmp-module which contains some additional enhancements over the original version by arut
 RUN mkdir -p /build && \
     wget -O - https://nginx.org/download/${NGINX_VERSION}.tar.gz | tar -zxC /build -f - && \
     mv /build/${NGINX_VERSION} /build/nginx && \
-    wget -O - https://github.com/DvdGiessen/nginx-rtmp-module/archive/${NGINX_RTMP_MODULE_VERSION}.tar.gz | tar -zxC /build -f - && \
-    mv /build/nginx-rtmp-module-${NGINX_RTMP_MODULE_VERSION} /build/nginx-rtmp-module
+    wget -O - https://github.com/winshining/nginx-http-flv-module/archive/${NGINX_HTTP_FLV_MODULE_VERSION}.tar.gz | tar -zxC /build -f - && \
+    mv /build/nginx-http-flv-module-${NGINX_HTTP_FLV_MODULE_VERSION} /build/nginx-http-flv-module
 
 # Build a minimal version of nginx
 RUN cd /build/nginx && \
     ./configure \
-        --build=DvdGiessen/nginx-rtmp-docker \
+        --build=MountainGod2/nginx-http-flv-docker \
         --prefix=/etc/nginx \
         --sbin-path=/usr/local/sbin/nginx \
         --conf-path=/etc/nginx/nginx.conf \
@@ -80,7 +79,7 @@ RUN cd /build/nginx && \
         --without-stream_upstream_random_module \
         --without-stream_upstream_zone_module \
         --with-ipv6 \
-        --add-module=/build/nginx-rtmp-module && \
+        --add-module=/build/nginx-http-flv-module && \
     make -j $(getconf _NPROCESSORS_ONLN)
 
 # Final image stage
